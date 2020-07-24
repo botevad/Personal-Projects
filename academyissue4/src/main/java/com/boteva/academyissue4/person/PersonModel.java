@@ -1,19 +1,20 @@
 package com.boteva.academyissue4.person;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class PersonModel
 {
-  @JsonProperty("id") // tova ni kazva kak se konvertirat dannite v json format
+  @JsonIgnore // tova ni kazva kak se konvertirat dannite v json format
   private Long   personId;
-  @JsonProperty("name")
+  @JsonProperty("givenName")
   private String givenName;
   @JsonProperty("surname")
   private String surname;
-  @JsonProperty("egn")
-  private String EGN;
+ @JsonProperty("EGN")
+  private Long EGN;
 
-  public PersonModel(Long personId, String givenName, String surname, String EGN)
+  public PersonModel(Long personId, String givenName, String surname, Long EGN)
   {
     this.personId = personId;
     this.givenName = givenName;
@@ -55,12 +56,12 @@ public class PersonModel
     this.surname = surname;
   }
 
-  public String getEGN()
+  public Long getEGN()
   {
     return EGN;
   }
 
-  public void setEGN(String EGN)
+  public void setEGN(Long EGN)
   {
     this.EGN = EGN;
   }

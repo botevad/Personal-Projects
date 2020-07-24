@@ -5,26 +5,26 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class GradeModel
 {
-  @JsonIgnore
+  @JsonProperty("personId")
   private Long   personId;
   @JsonProperty("grade_a")
-  private Grades gradeA;
+  private String grade_a;
   @JsonProperty("grade_b")
-  private Grades gradeB;
+  private String grade_b;
   @JsonProperty("grade_c")
-  private Grades gradeC;
+  private String grade_c;
 
   public GradeModel()
   {
     // default constructor
   }
 
-  public GradeModel(Long personId, Grades gradeA, Grades gradeB, Grades gradeC)
+  public GradeModel(Long personId, String grade_a, String grade_b, String grade_c)
   {
     this.personId = personId;
-    this.gradeA = gradeA;
-    this.gradeB = gradeB;
-    this.gradeC = gradeC;
+    this.grade_a = grade_a;
+    this.grade_b = grade_b;
+    this.grade_c = grade_c;
   }
 
   public Long getPersonId()
@@ -37,33 +37,33 @@ public class GradeModel
     this.personId = personId;
   }
 
-  public Grades getGradeA()
+  public String getGradeA()
   {
-    return gradeA;
+    return grade_a;
   }
 
-  public void setGradeA(Grades gradeA)
+  public void setGradeA(String grade_a)
   {
-    this.gradeA = gradeA;
+    this.grade_a = grade_a;
   }
 
-  public Grades getGradeB()
+  public String getGradeB()
   {
-    return gradeB;
+    return grade_b;
   }
 
-  public void setGradeB(Grades gradeB)
+  public void setGradeB(String grade_b)
   {
-    this.gradeB = gradeB;
+    this.grade_b = grade_b;
   }
 
-  public Grades getGradeC()
+  public String getGradeC()
   {
-    return gradeC;
+    return grade_c;
   }
 
-  public void setGradeC(Grades gradeC)
+  public void setGradeC(String grade_c)
   {
-    this.gradeC = gradeC;
+    this.grade_c = grade_c;
   }
 }

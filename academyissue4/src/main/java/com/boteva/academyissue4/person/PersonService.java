@@ -19,17 +19,18 @@ public class PersonService
     this.gradeDao = gradeDao;
   }
 
-  public long insertPerson(PersonModel person)
+  public void insertPerson(PersonModel person)
   {
-    long personId = personDao.insertPerson(person);
-    GradeModel grade = new GradeModel(personId, null, null, null);
-    gradeDao.createGrade(grade);
-    return personId;
+    personDao.insertPerson(person);
+    //long personId = personDao.insertPerson(person);
+//    GradeModel grade = new GradeModel(personId, null, null, null);
+//    gradeDao.createGrade(grade);
+//    return personId;
   }
 
   public void deletePersonById(Long id)
   {
-    gradeDao.deleteGrade(id);
+    gradeDao.deleteGradesById(id);
     personDao.deletePersonById(id);
   }
 
@@ -47,5 +48,9 @@ public class PersonService
   public List<PersonGrade> findPersonByGrades(String grade_a, String grade_b, String grade_c)
   {
     return personDao.findPersonByGrades(grade_a, grade_b, grade_c);
+  }
+  public List<PersonModel> searchByGivenName(String givenName){
+    return personDao.searchByGivenName(givenName);
+
   }
 }

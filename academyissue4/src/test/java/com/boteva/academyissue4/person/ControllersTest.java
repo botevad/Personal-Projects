@@ -47,9 +47,9 @@ public class ControllersTest extends BaseApplicationTest
     PersonModel person = new PersonModel();
     person.setGivenName("Ivan");
     person.setSurname("Ivanov");
-    person.setEGN("7878787788");
+    person.setEGN((long)(787878778));
 
-    // create
+     //create
     String uri = mvc.perform(post("/person")
         .contentType(MediaType.APPLICATION_JSON)
         .content(asJsonString(person)))
@@ -57,22 +57,22 @@ public class ControllersTest extends BaseApplicationTest
         .andExpect(header().exists(HttpHeaders.LOCATION))
         .andReturn().getResponse().getHeader(HttpHeaders.LOCATION);
 
-    // read
+     //read
     mvc.perform(get(uri))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.name").value("Ivan"))
         .andExpect(jsonPath("$.surname").value("Ivanov"))
         .andExpect(jsonPath("$.egn").value("7878787788"));
 
-    // read grades - automatically created with null values
+     //read grades - automatically created with null values
     mvc.perform(get(uri + "/grades"))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.grade_a").isEmpty())
         .andExpect(jsonPath("$.grade_b").isEmpty())
         .andExpect(jsonPath("$.grade_c").isEmpty());
 
-    // update grade
-    GradeModel gradeModel = new GradeModel(null, Grades.G, Grades.D, Grades.A);
+     //update grade
+    GradeModel gradeModel = new GradeModel(null, "G", "D", "C");
     mvc.perform(put(uri + "/grades")
         .contentType(MediaType.APPLICATION_JSON)
         .content(asJsonString(gradeModel)))
@@ -105,7 +105,7 @@ public class ControllersTest extends BaseApplicationTest
     // update
     person.setGivenName("Petar");
     person.setSurname("Petrov");
-    person.setEGN("1111111111");
+    person.setEGN((long)1111111111);
     mvc.perform(put(uri)
         .contentType(MediaType.APPLICATION_JSON)
         .content(asJsonString(person)))

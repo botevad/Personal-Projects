@@ -1,15 +1,10 @@
 package com.boteva.academyissue4.person;
 
-import org.apache.coyote.Response;
-import org.springframework.beans.BeanUtils;
-import org.springframework.context.annotation.Bean;
-import org.springframework.http.HttpStatus;
+import com.boteva.academyissue4.grade.GradeDao;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.net.URI;
-import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 
@@ -18,6 +13,7 @@ import java.util.List;
 public class PersonController
 {
   private final PersonService personService;
+
 
   public PersonController(PersonService personService)
   {
@@ -30,17 +26,17 @@ public class PersonController
   // HTTP POST /person
   // CREATE
   @PostMapping
-  public ResponseEntity<Void> createPerson(@RequestBody PersonModel model)
+  public ResponseEntity<PersonModel> createPerson(@RequestBody PersonModel person)
   {
-    long id = personService.insertPerson(model);
+    personService.insertPerson(person);
 
     // link to get method - getPerson(id)
-    URI location = ServletUriComponentsBuilder
-        .fromCurrentRequest()
-        .path("/{id}")
-        .buildAndExpand(id)
-        .toUri();
-    return ResponseEntity.created(location).build();
+//    URI location = ServletUriComponentsBuilder
+//        .fromCurrentRequest()
+//        .path("/{id}")
+//        .buildAndExpand(id)
+//        .toUri();
+    return ResponseEntity.ok(person);
   }
 
   // HTTP GET /person/{id}
@@ -83,7 +79,20 @@ public class PersonController
   @GetMapping
   public List<PersonGrade> findPeople(@RequestParam String grade_a, @RequestParam String grade_b, @RequestParam String grade_c)
   {
-    return personService.findPersonByGrades(grade_a, grade_b, grade_c);
+    Comparator<PersonGrade> comparatorByGivenName = Comparator.comparing(PersonGrade::getGivenName);
+
+    List<PersonGrade> sortedGrades = personService.findPersonByGrades(grade_a, grade_b, grade_c);
+    sortedGrades.sort(comparatorByGivenName);
+    return sortedGrades;
+  }
+
+  @GetMapping("/search")
+  public List<PersonModel> searchByGivenName(@RequestParam String givenName)
+  {
+    Comparator<PersonModel> comparatorBySurname = Comparator.comparing(PersonModel::getSurname);
+    List<PersonModel> sortedPeople = personService.searchByGivenName(givenName);
+    sortedPeople.sort(comparatorBySurname);
+    return sortedPeople;
   }
 }
 

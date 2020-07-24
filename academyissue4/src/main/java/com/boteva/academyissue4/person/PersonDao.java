@@ -22,21 +22,21 @@ public class PersonDao
   }
 
 
-  public long insertPerson(PersonModel person)
+  public void insertPerson(PersonModel person)
   {
     final String insertQuery = "INSERT INTO person (personId, givenName, surname, EGN) " +
         "VALUES (sequence_personId.NEXTVAL, :givenName, :surname, :EGN)";
 
     MapSqlParameterSource params = new MapSqlParameterSource();
-    final KeyHolder keyHolder = new GeneratedKeyHolder();
+    //final KeyHolder keyHolder = new GeneratedKeyHolder();
 
     params.addValue("givenName", person.getGivenName())
         .addValue("surname", person.getSurname())
         .addValue("EGN", person.getEGN());
+    namedTemplate.update(insertQuery, params);
+    //    namedTemplate.update(insertQuery, params, keyHolder, new String[]{"personId"});
+    //return keyHolder.getKey().longValue();
 
-    namedTemplate.update(insertQuery, params, keyHolder, new String[]{"personId"});
-
-    return keyHolder.getKey().longValue();
   }
 
   public void deletePersonById(Long id)
@@ -71,7 +71,7 @@ public class PersonDao
             PersonModel personModel = new PersonModel();
             personModel.setGivenName(rs.getString("givenName"));
             personModel.setPersonId(rs.getLong("personId"));
-            personModel.setEGN(rs.getString("EGN"));
+            personModel.setEGN(rs.getLong("EGN"));
             personModel.setSurname(rs.getString("surname"));
             return personModel;
           }
@@ -88,8 +88,8 @@ public class PersonDao
     String sql = "SELECT p.personId, p.givenName, p.surname, g.grade_a, g.grade_b, g.grade_c " +
         "FROM person p " +
         "INNER JOIN grade g ON p.personId=g.personId " +
-        "WHERE g.grade_a =:grade_a AND g.grade_b =:grade_b AND g.grade_c =:grade_c " +
-        "ORDER BY p.givenName ASC";
+        "WHERE g.grade_a =:grade_a AND g.grade_b =:grade_b AND g.grade_c =:grade_c ";
+//        "ORDER BY p.givenName ASC";
     MapSqlParameterSource params = new MapSqlParameterSource()
         .addValue("grade_a", grade_a)
         .addValue("grade_b", grade_b)
@@ -106,5 +106,26 @@ public class PersonDao
     });
     return result;
   }
+
+  public List<PersonModel> searchByGivenName(String givenName){
+    String sql = " SELECT personId, givenName, surname, EGN from person\n" +
+        "        WHERE givenName = :givenName";
+    MapSqlParameterSource params = new MapSqlParameterSource()
+        .addValue("givenName", givenName);
+//        .addValue("surname", surname);
+    List<PersonModel> result = namedTemplate.query(sql, params, (resultSet, i) -> {
+      PersonModel person = new PersonModel();
+      person.setPersonId(resultSet.getLong("personId"));
+      person.setGivenName(resultSet.getString("givenName"));
+      person.setSurname(resultSet.getString("surname"));
+      person.setEGN(resultSet.getLong("EGN"));
+//      personGrade.setGrade_a(resultSet.getString("grade_a"));
+//      personGrade.setGrade_b(resultSet.getString("grade_b"));
+//      personGrade.setGrade_c(resultSet.getString("grade_c"));
+      return person;
+    });
+    return result;
+  }
+
 
 }
